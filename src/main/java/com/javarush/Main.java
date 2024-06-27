@@ -7,10 +7,13 @@ import com.javarush.domain.City;
 import com.javarush.domain.Country;
 import com.javarush.domain.CountryLanguage;
 import io.lettuce.core.RedisClient;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static java.util.Objects.nonNull;
@@ -22,6 +25,7 @@ public class Main {
     private final RedisClient redisClient;
     private final CityDAO cityDAO;
     private final CountryDAO countryDAO;
+    private final static int STEP = 500;
 
     public Main() {
         sessionFactory = prepareRelationalDB();
@@ -63,5 +67,18 @@ public class Main {
     private void shutdown() {
         if (nonNull(sessionFactory)) sessionFactory.close();
         if (nonNull(redisClient)) redisClient.shutdown();
+    }
+
+    private List<City> getAllCities(Main main) {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            List<City> cities = new ArrayList<>();
+            session.beginTransaction();
+            int totalCount = main.cityDAO.getTotalCount();
+            for (int i = 0; i < totalCount; i += STEP) {
+                cities.addAll(main.cityDAO.getItems(i, STEP));
+            }
+            session.getTransaction().commit();
+            return cities;
+        }
     }
 }
