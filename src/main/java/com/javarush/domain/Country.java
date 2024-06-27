@@ -18,6 +18,7 @@ public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "code")
@@ -64,5 +65,5 @@ public class Country {
     @JoinColumn(name = "capital")
     private City capital;
 
-
+    // todo здесь добавить коллекцию set
 }
