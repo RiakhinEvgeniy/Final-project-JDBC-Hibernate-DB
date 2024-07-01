@@ -29,7 +29,7 @@ public class Country {
 
     @Column(name = "continent")
     @Enumerated(EnumType.ORDINAL)
-    private Integer continent;
+    private Continent continent;
 
     @Column(name = "region")
     private String region;
