@@ -54,7 +54,7 @@ public class Country {
     private BigDecimal gnpoId;
 
     @Column(name = "local_name")
-    private String localName;
+    private String name;
 
     @Column(name = "government_form")
     private String governmentForm;
